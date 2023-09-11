@@ -46,12 +46,28 @@ void play_video(const std::string &filepath)
 	double video_duration = get_video_duration(filepath);
 	std::string formatted_duration = format_duration(video_duration);
 
+
+#ifdef _WIN32
 	std::string command = "ffplay -i \"" + filepath + "\""
 	                      " -vf \"scale='min(1280,iw)':min'(850,ih)':force_original_aspect_ratio=decrease,drawtext=text='%{pts\\:gmtime\\:0\\:%H\\\\\\:%M\\\\\\:%S}/" + formatted_duration +
 	                      "':box=1:fontcolor=black:shadowcolor=white:shadowx=1:shadowy=1:fontsize=16:x=(w-tw)-(lh):y=h-(2*lh)\""
 	                      " -autoexit -stats ";
+#else
+	std::string command = "ffplay -i \"" + filepath + "\""
+	                      " -vf \"scale='min(1200,iw)':min'(850,ih)':force_original_aspect_ratio=decrease,drawtext=text='%{pts\\:gmtime\\:0\\:%H\\\\\\\\\\\\:%M\\\\\\\\\\\\:%S}/" + formatted_duration +
+	                      "':box=1:fontcolor=black:shadowcolor=white:shadowx=1:shadowy=1:fontsize=16:x=(w-tw)-(lh):y=h-(2*lh)\""
+	                      " -autoexit -stats ";
+#endif
 
 	system(command.c_str());
+
+/*
+ std::string command = "ffplay -i \"" + filepath + "\""
+        " -vf \"scale=1100:-1,drawtext=text='%{pts\\:gmtime\\:0\\:%H\\\\\\\\\\\\:%M\\\\\\\\\\\\:%S}/" + formatted_duration +
+        "':box=1:fontcolor=black:shadowcolor=white:shadowx=1:shadowy=1:fontsize=16:x=(w-tw)-(lh):y=h-(2*lh)\""
+        " -autoexit -stats ";
+
+*/
 }
 
 int main(int argc, char* argv[])
